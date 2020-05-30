@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Library</title>
+	<meta name="robots" content="noindex">
+	<meta name="googlebot" content="noindex">
+    <meta
+      name="description"
+      content="Zmags is a content creation tool used to create and publish experiences to your website"
+    />
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1.0"
+    />
+
+    <!-- CSS  -->
+
+    <!-- <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/> -->
+
+    <link
+      href="css/library.css"
+      type="text/css"
+      rel="stylesheet"
+      media="screen,projection"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+
+    <link
+      rel="shortcut icon"
+      href="https://res.cloudinary.com/mselbekk-com/image/upload/v1584481174/z_aw9bmt.png"
+      type="image/x-icon"
+    />
+    <!-- <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700,800&display=swap" rel="stylesheet"> -->
+    <!-- CSS  -->
+
+    <!-- JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- JS -->
+  </head>
+  <body>
+	<nav>
+		<div class="container">
+			<h1>Zmags Experience Hub</h1>
+			<a href="#"><button class="nav-buttons">Search for URLS</button></a>
+			<a href="/index.html"><button class="nav-buttons">Add URL to Library</button></a>
+		</div>
+		</nav>
+
+    <div class="wrapper">
+	<script>
+		$( document ).ready(function() {
+			$(".boom").click(function() {
+				if($(this).hasClass('clicked')){
+					$(this).removeClass('clicked');
+				} else {
+					$('.boom').removeClass('clicked');
+					$(this).addClass('clicked');
+				}
+			});
+			$(".boomtwo").click(function() {
+				if($(this).hasClass('clicked')){
+					$(this).removeClass('clicked');
+				} else {
+					$('.boomtwo').removeClass('clicked');
+					$(this).addClass('clicked');
+				}
+			});
+			$(".boomthree").click(function() {
+				if($(this).hasClass('clicked')){
+					$(this).removeClass('clicked');
+				} else {
+					$('.boomthree').removeClass('clicked');
+					$(this).addClass('clicked');
+				}
+			});
+		});
+		
+		var xhReq = new XMLHttpRequest();
+		xhReq.open("GET", 'https://sheets.googleapis.com/v4/spreadsheets/1uvR-NcqFeqhBavIokcDl4Lv7a8cyAVw7dti5Hol70nI/values/Sheet1!A:D?key=AIzaSyCOkvqyD54WTLneD9kaCO0u0yLUjfJen5Q', false);
+		xhReq.send(null);
+		var jsonObject = JSON.parse(xhReq.responseText);
+		var globalData = [];
+		setTimeout(function(){ loadData(); }, 1000);
+		
+		var content = '', vertical = 'N/A', ecomm = 'N/A', usecase = 'N/A';
+		var match1, match2, match3;
+		
+		function displayList(exampleUrl){	
+			content +=		'<tr>\n';
+			content +=			'<td>\n';
+			content +=				'<a href="'+exampleUrl+'">'+exampleUrl+'</a>\n';
+			content +=			'</td>\n';
+			content +=		'</tr>\n';
+		}
+		
+		function setVert(option){ 
+			if(option == vertical){
+				vertical = 'N/A';
+			} else {
+				vertical = option; 
+			}
+		}
+		function setEcomm(option){ 
+			if(option == ecomm){
+				ecomm = 'N/A';
+			} else {
+				ecomm = option; 
+			}
+		}
+		function setUse(option){ 
+			if(option == usecase){
+				usecase = 'N/A';
+			} else {
+				usecase = option; 
+			}
+		}
+		
+		function filterContent(){
+			document.getElementById("list").innerHTML = '';
+			content = '';
+			
+			for(i=1;i<jsonObject.values.length;i++)
+			{
+				if(vertical != 'N/A'){
+					match1 = jsonObject.values[i][1] == vertical;
+				}
+				if(ecomm != 'N/A'){
+					match2 = jsonObject.values[i][2] == ecomm;
+				}
+				if(usecase != 'N/A'){
+					match3 = jsonObject.values[i][3] == usecase;
+				}
+				
+				if		 (vertical != 'N/A' && ecomm != 'N/A' && usecase != 'N/A'){
+					if(match1 && match2 && match3)
+						displayList(jsonObject.values[i][0]);
+				} else if(vertical != 'N/A' && ecomm != 'N/A' && usecase == 'N/A'){
+					if(match1 && match2)
+						displayList(jsonObject.values[i][0]);
+				} else if(vertical != 'N/A' && ecomm == 'N/A' && usecase != 'N/A'){
+					if(match1 && match3)
+						displayList(jsonObject.values[i][0]);
+				} else if(vertical == 'N/A' && ecomm != 'N/A' && usecase != 'N/A'){
+					if(match2 && match3)
+						displayList(jsonObject.values[i][0]);
+				} else if(vertical != 'N/A' && ecomm == 'N/A' && usecase == 'N/A'){
+					if(match1)
+						displayList(jsonObject.values[i][0]);
+				} else if(vertical == 'N/A' && ecomm != 'N/A' && usecase == 'N/A'){
+					if(match2)
+						displayList(jsonObject.values[i][0]);
+				} else if(vertical == 'N/A' && ecomm == 'N/A' && usecase != 'N/A'){
+					if(match3)
+						displayList(jsonObject.values[i][0]);
+				}
+
+			}
+			document.getElementById("list").innerHTML = content;
+		}
+		
+		function loadData() {
+			for(i=1;i<jsonObject.values.length;i++)
+			{
+				globalData[jsonObject.values[i][0]] = {'pURL': jsonObject.values[i][0], 'pVert': jsonObject.values[i][1], 'pEcomm':  jsonObject.values[i][2], 'pUse':  jsonObject.values[i][3]};
+			}
+		}
+	</script>
+
+
+      <div class="margins header"></div>
+      <div class="sidebar"></div>
+
+      <div class="box content">
+        <div class="wrapper">
+          <div id="second-grid" class="left-side">
+            <div class="uno">Pick Experience Criteria</div>
+			<div class="dos" id="myDIV">
+              <button class="boom" onclick="setVert('fashion')">Fashion</button>
+              <button class="boom" onclick="setVert('beauty')">Beauty</button>
+              <button class="boom" onclick="setVert('furniture')">Furniture</button>
+              <button class="boom" onclick="setVert('non-retail')">Non-Retail</button>
+              <button class="boom" onclick="setVert('active')">Active</button>
+              <button class="boom" onclick="setVert('jewelry')">Jewelry</button>
+			  <button class="boom" onclick="setVert('food')">Food &amp; Drink</button>
+			  <button class="boom" onclick="setVert('other')">Other</button>
+            </div>
+            <div class="tres" id="myDIVthree">
+				<button class="boomtwo" onclick="setEcomm('sfcc')">Salesforce</button>
+				<button class="boomtwo" onclick="setEcomm('magento')">Magento</button>
+				<button class="boomtwo" onclick="setEcomm('shopify')">Shopify</button>
+				<button class="boomtwo" onclick="setEcomm('bigcommerce')">BigCommerce</button>
+				<button class="boomtwo" onclick="setEcomm('zsites')">Zsites</button>
+				<button class="boomtwo" onclick="setEcomm('other')">Other</button>
+            </div>
+			<div class="quatro" id="myDIV">
+              <button class="boomthree" onclick="setUse('homepage')">Homepage</button>
+			  <button class="boomthree" onclick="setUse('landing')">Landing</button>
+              <button class="boomthree" onclick="setUse('quiz')">Quiz</button>
+              <button class="boomthree" onclick="setUse('banner')">Banner</button>
+              <button class="boomthree" onclick="setUse('lookbook')">Look Book</button>
+			  <button class="boomthree" onclick="setUse('blog')">Blog</button>
+              <button class="boomthree" onclick="setUse('other')">Other</button>
+            </div>
+            <div class="says">
+              <button class="submit" onclick="filterContent()">Find Experiences</button>
+            </div>
+          </div>
+          <div class="right-side">
+            <div class="scrollable">
+              <table style="width: 100%;" cellpadding="4">
+                <tbody id="list">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rightside"></div>
+      <div class="margins footer"></div>
+    </div>
+
+    <!-- <script src="/index.js"></script> -->
+    <script src="/library.js"></script>
+  </body>
+
+  <footer></footer>
+</html>
